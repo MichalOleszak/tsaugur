@@ -6,7 +6,8 @@
 augur /ˈȯ-gər/
 
 NOUN
-1. (in ancient Rome) a religious official who observed and interpreted omens and signs to help guide the making of public decisions
+1. (in ancient Rome) a religious official who observed and interpreted 
+   omens and signs to help guide the making of public decisions
 2. any prophet or soothsayer
 
 VERB
