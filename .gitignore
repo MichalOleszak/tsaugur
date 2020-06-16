@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Idea
+.idea/
+
+# MacBook's viewing preference files
+*.DS_Store
