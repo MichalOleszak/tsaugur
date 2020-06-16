@@ -2,6 +2,7 @@
 
 ![](img/logo.png)
 
+```
 augur /ˈȯ-gər/
 
 NOUN
@@ -10,11 +11,11 @@ NOUN
 
 VERB
 3. to predict (some future event), as from signs or omens
+```
 
 # Time Series Augur
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.6](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-360/)
-
 
 ## What is tsaugur?
 `tsaugur` is a low-code Python package for time series forecasting. It allows data scientists to fit, tune, compare, evaluate, ensemble  and visualize a range of models quickly and with just a few lines of code.  
