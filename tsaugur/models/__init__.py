@@ -15,4 +15,9 @@ MODELS = {
 
 
 def create_model(model_key):
+    """
+    Instantiate the model class.
+    :param model_key: Str, a unique identifier of a tsaugur model class for a specific model.
+    :return: The tsaugur model class for the requested model.
+    """
     return MODELS[model_key]

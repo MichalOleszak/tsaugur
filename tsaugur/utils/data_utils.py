@@ -1,8 +1,11 @@
-def period_to_int(period):
+def _period_to_int(period):
     """
-    Reference: https://robjhyndman.com/hyndsight/seasonal-periods/
-    :param period:
-    :return:
+    Convert time series' period from string representation to integer.
+    :param period: Int or Str, the number of observations per cycle: 1 or "annual" for yearly data, 4 or "quarterly"
+    for quarterly data, 7 or "daily" for daily data, 12 or "monthly" for monthly data, 24 or "hourly" for hourly
+    data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
+    "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
+    :return: Int, a time series' period.
     """
     mapper = {
         "annual": 1,
