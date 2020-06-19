@@ -2,19 +2,21 @@
 
 ![](img/logo.png)
 
+```
 augur /ˈȯ-gər/
 
 NOUN
-1. (in ancient Rome) a religious official who observed and interpreted omens and signs to help guide the making of public decisions
+1. (in ancient Rome) a religious official who observed and interpreted 
+   omens and signs to help guide the making of public decisions
 2. any prophet or soothsayer
 
 VERB
 3. to predict (some future event), as from signs or omens
+```
 
 # Time Series Augur
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.6](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-360/)
-
 
 ## What is tsaugur?
 `tsaugur` is a low-code Python package for time series forecasting. It allows data scientists to fit, tune, compare, evaluate, ensemble  and visualize a range of models quickly and with just a few lines of code.  
