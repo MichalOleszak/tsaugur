@@ -1,15 +1,13 @@
-from tsaugur.metrics import _get_metric
+from tbats import TBATS
+
+from tsaugur.utils import data_utils
+from tsaugur.models import base_model
 
 
-class BaseModel:
+class Tbats(base_model.BaseModel):
     """
-    Base model class. All tsaugur models inherit after this class.
+    Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components.
     """
-
-    def __init__(self):
-        self.model = None
-        self.period = None
-        self.params = {"tuned": False}
 
     def _tune(self, y, period, x=None, metric="mse", val_size=None, verbose=False):
         """
@@ -19,13 +17,17 @@ class BaseModel:
         for quarterly data, 7 or "daily" for daily data, 12 or "monthly" for monthly data, 24 or "hourly" for hourly
         data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
         "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
-        :param x: pd.DataFrame or 2-D np.array, exogeneous predictors, optional
-        :param metric: Str, the metric used for model selection.
+        :param x: not used for TBATS model
+        :param metric: not used for TBATS model; model selection is based on the AIC.
         :param val_size: Int, the number of most recent observations to use as validation set for tuning.
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
-        raise NotImplementedError
+        if verbose:
+            print("Tuning TBATS parameters...")
+        self.period = data_utils._period_to_int(period) if type(period) == str else period
+        self.model = TBATS(seasonal_periods=[period], show_warnings=False)
+        self.params["tuned"] = True
 
     def fit(self, y, period, x=None, metric="mse", val_size=None, verbose=False):
         """
@@ -35,31 +37,21 @@ class BaseModel:
         for quarterly data, 7 or "daily" for daily data, 12 or "monthly" for monthly data, 24 or "hourly" for hourly
         data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
         "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
-        :param x: pd.DataFrame or 2-D np.array, exogeneous predictors, optional
-        :param metric: Str, the metric used for model selection.
-        :param val_size: Int, the number of most recent observations to use as validation set for tuning.
+        :param x: not used for TBATS model
+        :param metric: not used for TBATS model; model selection is based on the AIC.
+        :param val_size: not used for TBATS model; model selection is based on the AIC.
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
-        raise NotImplementedError
+        self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
+        self.model = self.model.fit(y)
 
     def predict(self, horizon, x=None):
         """
         Predict future values of the time series using the fitted model.
         :param horizon: Int, the number of observations in the future to predict
-        :param x: pd.DataFrame or 2-D np.array, exogeneous predictors in the forecasted period, required if used in fit
+        :param x: not used for TBATS model
         :return: 1-D np.array with predictions
         """
-        raise NotImplementedError
+        return self.model.forecast(steps=horizon)
 
-    def score(self, y_true, x=None, metric="smape"):
-        """
-        Score the model performance on a separate test set.
-        :param y_true: pd.Series or 1-D np.array, ground-truth values.
-        :param x: pd.DataFrame or 2-D np.array, exogeneous predictors in the forecasted period, required if used in fit
-        :param metric: Str, the metric to produce.
-        :return: Float, model performance metric.
-        """
-        y_pred = self.predict(horizon=len(y_true), x=x)
-        metric_fun = _get_metric(metric)
-        return metric_fun(y_true, y_pred)

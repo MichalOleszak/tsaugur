@@ -13,7 +13,7 @@ class HoltWinters(base_model.BaseModel):
     Holt-Winters Exponential Smoothing.
     """
 
-    def tune(self, y, period, x=None, metric="smape", val_size=None, verbose=False):
+    def _tune(self, y, period, x=None, metric="smape", val_size=None, verbose=False):
         """
         Tune hyperparameters of the model.
         :param y: pd.Series or 1-D np.array, time series to predict.
@@ -21,6 +21,7 @@ class HoltWinters(base_model.BaseModel):
         for quarterly data, 7 or "daily" for daily data, 12 or "monthly" for monthly data, 24 or "hourly" for hourly
         data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
         "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
+        :param x: not used for Holt-Winters model
         :param metric: Str, the metric used for model selection. One of: "mse", "mae", "mape", "smape", "rmse".
         :param val_size: Int, the number of most recent observations to use as validation set for tuning.
         :param verbose: Boolean, True for printing additional info while tuning.
@@ -62,16 +63,21 @@ class HoltWinters(base_model.BaseModel):
         self.params.update(best_params)
         self.params["tuned"] = True
 
-    def fit(self, y, x=None):
+    def fit(self, y, period, x=None, metric="smape", val_size=None, verbose=False):
         """
         Build the model with using best-tuned hyperparameter values.
         :param y: pd.Series or 1-D np.array, time series to predict.
+        :param period: Int or Str, the number of observations per cycle: 1 or "annual" for yearly data, 4 or "quarterly"
+        for quarterly data, 7 or "daily" for daily data, 12 or "monthly" for monthly data, 24 or "hourly" for hourly
+        data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
+        "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
         :param x: not used for Holt-Winters model
+        :param metric: Str, the metric used for model selection. One of: "mse", "mae", "mape", "smape", "rmse".
+        :param val_size: Int, the number of most recent observations to use as validation set for tuning.
+        :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
-        if not self.params["tuned"]:
-            raise Exception("Tune the parameters first before fitting the model by calling `.tune()` "
-                            "on the model object.")
+        self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
         model = ExponentialSmoothing(y, seasonal_periods=self.period, trend=self.params["trend"],
                                      seasonal=self.params["seasonal"], damped=self.params["damped"])
         self.model = model.fit(use_boxcox=self.params["use_boxcox"], remove_bias=self.params["remove_bias"])
