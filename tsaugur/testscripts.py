@@ -2,22 +2,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tsaugur.models import create_model
 
-d = pd.read_csv("datasets/air_passengers.csv").passengers
-y_train = d[:134]
-y_test = d[134:]
-period = 12
+# d = pd.read_csv("datasets/air_passengers.csv").passengers
+# y_train = d[:134]
+# y_test = d[134:]
+# period = 12
 
-# d = pd.read_csv("datasets/kaggle_sales.csv").sales
-# y_train = d[:(len(d) - 365)]
-# y_test = d[(len(d) - 365):]
-# period = 365
+d = pd.read_csv("datasets/kaggle_sales.csv").sales
+y_train = d[(len(d) - 365*2):(len(d) - 365)]
+y_test = d[(len(d) - 365):]
+period = 7
 
 preds = {}
 models = [
-    "sarima",
-    "fourier_sarima",
+    #"sarima",
+    #"fourier_sarima",
     "holt_winters",
-    "tbats"
+    #"tbats",
+    "bdlm",
 ]
 for m in models:
     mod = create_model(m)
@@ -44,4 +45,8 @@ if "tbats" in models:
     tb = pd.Series(preds["tbats"])
     tb.index = y_test.index
     plt.plot(tb, c="purple")
+if "bdlm" in models:
+    bdlm = pd.Series(preds["bdlm"])
+    bdlm.index = y_test.index
+    plt.plot(bdlm, c="green")
 plt.show()

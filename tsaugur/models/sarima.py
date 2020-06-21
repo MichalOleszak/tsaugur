@@ -24,8 +24,6 @@ class Sarima(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
-        if verbose:
-            print("Tuning SARIMA parameters...")
         self.period = data_utils._period_to_int(period) if type(period) == str else period
         val_size = int(len(y) * .1) if val_size is None else val_size
         model = auto_arima(y, m=self.period, seasonal=True, d=None, D=None, information_criterion='oob', maxiter=100,
