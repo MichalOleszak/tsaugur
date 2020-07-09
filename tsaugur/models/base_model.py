@@ -10,6 +10,8 @@ class BaseModel:
         self.model = None
         self.period = None
         self.params = {"tuned": False}
+        self.last_fitting_date = None
+        self.time_delta = None
 
     def _tune(self, y, period, x=None, metric="mse", val_size=None, verbose=False):
         """

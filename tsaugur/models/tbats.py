@@ -23,7 +23,7 @@ class Tbats(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
-        self.period = data_utils._period_to_int(period) if type(period) == str else period
+        self.period = data_utils.period_to_int(period) if type(period) == str else period
         self.model = TBATS(seasonal_periods=[period], show_warnings=False)
         self.params["tuned"] = True
 

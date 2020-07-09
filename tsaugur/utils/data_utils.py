@@ -1,4 +1,7 @@
-def _period_to_int(period):
+import pandas as pd
+
+
+def period_to_int(period):
     """
     Convert time series' period from string representation to integer.
     :param period: Int or Str, the number of observations per cycle: 1 or "annual" for yearly data, 4 or "quarterly"
@@ -24,3 +27,21 @@ def _period_to_int(period):
     if period not in mapper.keys():
         raise ValueError(f"{period} is not a valid value for the 'period' argument.")
     return mapper[period]
+
+
+def get_pandas_frequency(period):
+    mapper = {
+        1: "Y",
+        4: "Q",
+        7: "D",
+        12: "M",
+        24: "H",
+        52: "W",
+    }
+    if period not in mapper.keys():
+        raise ValueError(f"{period} is not a valid value for the 'period' argument.")
+    return mapper[period]
+
+
+def create_dates(start_date, period, length):
+    return pd.date_range(start=start_date, periods=length, freq=get_pandas_frequency(period))

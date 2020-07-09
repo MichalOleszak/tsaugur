@@ -27,9 +27,9 @@ class HoltWinters(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
-        self.period = data_utils._period_to_int(period) if type(period) == str else period
+        self.period = data_utils.period_to_int(period) if type(period) == str else period
         val_size = int(len(y) * .1) if val_size is None else val_size
-        y_train, y_val = model_utils._train_val_split(y, val_size=val_size)
+        y_train, y_val = model_utils.train_val_split(y, val_size=val_size)
         metric_fun = _get_metric(metric)
 
         params_grid = {

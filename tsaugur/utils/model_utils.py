@@ -1,4 +1,4 @@
-def _train_val_split(d, val_size):
+def train_val_split(d, val_size):
     """
     Split a time series into train and validation sets by setting most recent data aside for validation.
     :param y: pd.Series or 1-D np.array or 2-D np.array, time series to predict or exogeneous variables.
