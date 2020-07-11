@@ -5,7 +5,7 @@ import numpy as np
 
 from tsaugur.utils import data_utils, model_utils, SuppressStdoutStderr
 from tsaugur.models import base_model
-from tsaugur.metrics import _get_metric
+from tsaugur.metrics import get_metric
 
 
 class Bdlm(base_model.BaseModel):
@@ -33,7 +33,7 @@ class Bdlm(base_model.BaseModel):
         y_train, y_val = model_utils.train_val_split(y, val_size=val_size)
         if x is not None:
             x_train, x_val = model_utils.train_val_split(x, val_size=val_size)
-        metric_fun = _get_metric(metric)
+        metric_fun = get_metric(metric)
 
         params_grid = {
             "trend": [0, 1, 2, 3],
@@ -92,6 +92,9 @@ class Bdlm(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
+        self.y = y
+        self.name = "Bayesian Dynamic Linear Model"
+        self.key = "bdlm"
         self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
         self.model = pydlm.dlm(y)
         self.model = self.model + pydlm.trend(degree=self.params["trend"], discount=0.5)

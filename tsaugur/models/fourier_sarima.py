@@ -51,6 +51,9 @@ class FourierSarima(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
+        self.y = y
+        self.name = "Fourier ARIMA"
+        self.key = "fourier_sarima"
         self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
         pipe = pipeline.Pipeline([
             ("fourier", FourierFeaturizer(self.period, self.period / 2)),

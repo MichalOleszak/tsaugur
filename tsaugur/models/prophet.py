@@ -6,7 +6,7 @@ from fbprophet import Prophet
 
 from tsaugur.utils import data_utils, model_utils, SuppressStdoutStderr
 from tsaugur.models import base_model
-from tsaugur.metrics import _get_metric
+from tsaugur.metrics import get_metric
 
 
 class FbProphet(base_model.BaseModel):
@@ -41,7 +41,7 @@ class FbProphet(base_model.BaseModel):
                 input_df[variable_id] = x_variable
             for variable_id, x_variable in enumerate(x_val.T):
                 future_df[variable_id] = x_variable
-        metric_fun = _get_metric(metric)
+        metric_fun = get_metric(metric)
 
         params_grid = {
             "seasonality": ["additive", "multiplicative"],
@@ -86,11 +86,15 @@ class FbProphet(base_model.BaseModel):
         data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
         "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
         :param x: pd.DataFrame or 2-D np.array, exogeneous predictors, optional
+        :param start_date: pd.datetime object, date of the first observation in training data
         :param metric: Str, the metric used for model selection. One of: "mse", "mae", "mape", "smape", "rmse".
         :param val_size: Int, the number of most recent observations to use as validation set for tuning.
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
+        self.y = y
+        self.name = "Prophet"
+        self.key = "prophet"
         self._tune(y=y, period=period, start_date=start_date, metric=metric, val_size=val_size, verbose=verbose)
         dates = data_utils.create_dates(start_date, period=self.period, length=len(y))
         input_df = pd.DataFrame({"ds": dates, "y": y})

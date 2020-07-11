@@ -47,6 +47,9 @@ class Sarima(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
+        self.y = y
+        self.name = "SARIMA"
+        self.key = "sarima"
         self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
         model = arima.ARIMA(maxiter=100, order=self.params["order"], seasonal_order=self.params["seasonal_order"],
                             suppress_warnings=True)

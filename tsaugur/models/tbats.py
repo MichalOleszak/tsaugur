@@ -41,6 +41,9 @@ class Tbats(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
+        self.y = y
+        self.name = "TBATS"
+        self.key = "tbats"
         self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
         self.model = self.model.fit(y)
 

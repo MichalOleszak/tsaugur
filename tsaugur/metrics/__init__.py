@@ -25,7 +25,7 @@ METRICS = {
 }
 
 
-def _get_metric(metric_key):
+def get_metric(metric_key):
     """
     Return a model performance metric function.
     :param metric_key: Str, a unique identifier of a model performance metric.

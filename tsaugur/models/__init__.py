@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+import joblib
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -74,6 +75,18 @@ def create_model(model_key):
     return MODELS[model_key]
 
 
+def load_model(filepath):
+    """
+    Load saved tsaugur models.
+    :param filepath: File to load the model form.
+    :return: tsaugur model object.
+    """
+    model_key = joblib.load(filepath)["key"]
+    model = create_model(model_key)
+    model.load_model(filepath)
+    return model
+
+
 def print_available_models():
     """
     Print the list of models supported by tsaugur with additional information.
@@ -96,5 +109,21 @@ def print_available_models():
 
 def compare_models(model_tags, y_train, y_test, period, x_train=None, x_test=None, val_size=None,
                    start_date=None, metrics=("smape", "mae", "mse", "rmse")):
+    """
+    Instantiates a model comparison object.
+    :param model_tags: list of strings, tags of the models to compare.
+    :param y_train: pd.Series or 1-D np.array, time series to predict.
+    :param y_test: pd.Series or 1-D np.array, ground-truth values.
+    :param period: Int or Str, the number of observations per cycle: 1 or "annual" for yearly data, 4 or "quarterly"
+    for quarterly data, 7 or "daily" for daily data, 12 or "monthly" for monthly data, 24 or "hourly" for hourly
+    data, 52 or "weekly" for weekly data. First-letter abbreviations of strings work as well ("a", "q", "d", "m",
+    "h" and "w", respectively). Additional reference: https://robjhyndman.com/hyndsight/seasonal-periods/.
+    :param x_train: pd.DataFrame or 2-D np.array, exogeneous predictors for the training set, optional
+    :param x_test: pd.DataFrame or 2-D np.array, exogeneous predictors for the testing set, optional
+    :param val_size: Int, the number of most recent observations to use as validation set for tuning.
+    :param start_date: pd.datetime object, date of the first observation in training data.
+    :param metrics: list of strings, the metrics to score on.
+    :return: A comparison object of class ModelComparison.
+    """
     return ModelComparison(model_tags=model_tags, y_train=y_train, y_test=y_test, period=period, x_train=x_train,
                            x_test=x_test, val_size=val_size, start_date=start_date, metrics=metrics)

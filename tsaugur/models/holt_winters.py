@@ -5,7 +5,7 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 from tsaugur.utils import data_utils, model_utils
 from tsaugur.models import base_model
-from tsaugur.metrics import _get_metric
+from tsaugur.metrics import get_metric
 
 
 class HoltWinters(base_model.BaseModel):
@@ -30,7 +30,7 @@ class HoltWinters(base_model.BaseModel):
         self.period = data_utils.period_to_int(period) if type(period) == str else period
         val_size = int(len(y) * .1) if val_size is None else val_size
         y_train, y_val = model_utils.train_val_split(y, val_size=val_size)
-        metric_fun = _get_metric(metric)
+        metric_fun = get_metric(metric)
 
         params_grid = {
             "trend": ["add", "mul"],
@@ -74,6 +74,9 @@ class HoltWinters(base_model.BaseModel):
         :param verbose: Boolean, True for printing additional info while tuning.
         :return: None
         """
+        self.y = y
+        self.name = "Holt-Winters Exponential Smoothing"
+        self.key = "holt_winters"
         self._tune(y=y, period=period, x=x, metric=metric, val_size=val_size, verbose=verbose)
         model = ExponentialSmoothing(y, seasonal_periods=self.period, trend=self.params["trend"],
                                      seasonal=self.params["seasonal"], damped=self.params["damped"])
