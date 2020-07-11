@@ -64,6 +64,7 @@ preds = model.predict(horizon=24)
 model.plot_predict(horizon=24)
 ```
 ![](img/predict_plot.png)
+
 Score and plot the model against the test set:
 ```python
 score = model.score(y_test, metric="smape")
